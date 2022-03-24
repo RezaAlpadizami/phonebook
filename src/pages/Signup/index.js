@@ -10,17 +10,43 @@ import {
   SafeAreaView,
   Button,
 } from 'react-native';
+import {useDispatch, useSelector} from 'react-redux';
+import {setFormRegister} from '../../redux/action';
+import Axios from 'axios';
+import URL_API from '../../API/URL_API';
 
 const SignUp = () => {
+  const data = useSelector(state => state.registerReducer);
+  const dispatch = useDispatch();
   const navigation = useNavigation();
 
-  const onSignUpPressed = () => {
+  const buttonSignUpPressed =  () => {
+  
+    Axios.post(`${URL_API}/signup `, {
+      name: data.name,
+      email: data.email,
+      password: data.password,
+      confirmPasword: data.confirmPasword,
+    })
+      .then(response => {
+        console.log(response);
+      })
+      .catch(error => {
+        console.log('error', error);
+      });
+  };
+
+  const onLoginPressed = () => {
     navigation.navigate('Login');
+  };
+
+  const onChangeText = (value, inputType) => {
+    dispatch(setFormRegister(inputType, value));
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.text} onPress={onSignUpPressed}>
+      <Text style={styles.text} onPress={onLoginPressed}>
         Log In
       </Text>
       <View
@@ -39,8 +65,9 @@ const SignUp = () => {
             />
             <TextInput
               placeholderTextColor="#B6AFAF"
-              placeholder="Email"
+              placeholder="Name"
               style={styles.input}
+              onChangeText={value => onChangeText(value, 'name')}
             />
           </View>
           <View style={styles.sectionStyle}>
@@ -52,6 +79,7 @@ const SignUp = () => {
               placeholderTextColor="#B6AFAF"
               placeholder="Email"
               style={styles.input}
+              onChangeText={value => onChangeText(value, 'email')}
             />
           </View>
 
@@ -65,6 +93,20 @@ const SignUp = () => {
               placeholder="Password"
               keyboardType="numeric"
               style={styles.input}
+              onChangeText={value => onChangeText(value, 'password')}
+            />
+          </View>
+          <View style={styles.sectionStyle}>
+            <Image
+              source={require('../../Assets/image/pin-code1.png')}
+              style={styles.imageInput1}
+            />
+            <TextInput
+              placeholderTextColor="#B6AFAF"
+              placeholder="Confirm Password"
+              keyboardType="numeric"
+              style={styles.input}
+              onChangeText={value => onChangeText(value, 'confrimPassword')}
             />
           </View>
 
@@ -75,7 +117,12 @@ const SignUp = () => {
               marginLeft: 0,
               marginTop: 27,
             }}>
-            <Button style={styles.button} color="#E94560" title="LOG IN" />
+            <Button
+              style={styles.button}
+              color="#E94560"
+              title="SIGN UP"
+              onPress={buttonSignUpPressed}
+            />
           </View>
         </View>
       </SafeAreaView>

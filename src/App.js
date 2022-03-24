@@ -7,13 +7,12 @@ import Navigation from './navigation';
 import {Provider} from 'react-redux';
 import store from './redux/store';
 
-
 const App = () => {
   return (
     <Provider store={store}>
-    <SafeAreaView style={styles.root}>
-      <Navigation />
-    </SafeAreaView>
+      <SafeAreaView style={styles.root}>
+        <Navigation />
+      </SafeAreaView>
     </Provider>
   );
 };

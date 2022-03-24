@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect} from 'react';
 import {Image, TouchableOpacity, Text} from 'react-native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {useNavigation} from '@react-navigation/native';
@@ -8,11 +8,15 @@ import {Favorite, MyContact, Recent} from '../pages';
 const BottomTab = createBottomTabNavigator();
 
 function ButtonAdd() {
-  const navigation = useNavigation();
+  const navigation = useNavigation()
 
   const onButtonPressed = () => {
     navigation.navigate('Back');
   };
+
+  // useEffect(() => {
+  // console.log(loginReducer)
+  // },[loginReducer])
 
   return (
     <TouchableOpacity

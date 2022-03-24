@@ -3,8 +3,7 @@ import React, {useState, useEffect} from 'react';
 import {Text, View, Image, StyleSheet, Alert} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
-import Axios from 'axios';
-import {setToken} from '../../redux/action';
+import {setFormLogin, setToken} from '../../redux/action';
 
 
 import CustomInput from '../../component/CustomInput';
@@ -13,44 +12,31 @@ import iconInput from '../../Assets/image/email1.png';
 import iconPassword from '../../Assets/image/Vector1.png';
 
 const LoginPage = () => {
-  const [state, setState] = useState({
-    isLoading: false,
-    email: '',
-    password: '',
-  });
+  const loginReducer = useSelector(state => state.loginReducer);
   const dispatch = useDispatch();
   const navigation = useNavigation();
 
-
-  const {isLoading, email, password, isSecure} = state;
-  const updateState = data => setState(() => ({...state, ...data}));
+  // const {isLoading, email, password, isSecure} = state;
+  // const updateState = data => setState(() => ({...state, ...data}));
 
   const onLogInPressed = () => {
-    const onLoginAction = useSelector(state => state.onLoginAction);
-    console.log(onLoginAction);
-
-    useEffect(() => {
-      dispatch(setToken());
-    }, [dispatch])
-
-    Axios.defaults.headers.common['Authorization'] = `Bearer${token}`;
-    AsyncStorage.setItem('token', token)
-      .then(value => {
-        navigation.navigate('Router');
-        console.log(value);
-      })
-      .catch(error => {
-        console.log(error);
-      });
-
-    if (email == '' || password == '') {
-      Alert.alert('Please enter your email and password');
+  
+    if (
+      loginReducer.login.email == '' ||
+      loginReducer.login.password == ''
+    ) {
+      Alert.alert('Please enter your usernam and password');
       return;
-    }
+    } 
+    setToken(dispatch, navigation, loginReducer);
   };
 
   const onSignUpPressed = () => {
     navigation.navigate('Signup');
+  };
+
+  const onChangeText = (inputValue, inputType) => {
+    dispatch(setFormLogin(inputType, inputValue));
   };
 
   return (
@@ -65,14 +51,14 @@ const LoginPage = () => {
         <View style={styles.containerSectionStyle}>
           <CustomInput
             placeholder="Username"
-            value={email}
-            onChangeText={email => updateState({email})}
+            value={loginReducer.login.email}
+            onChangeText={value => onChangeText(value, 'email')}
             source={iconInput}
           />
           <CustomInput
             placeholder="Password"
-            value={password}
-            onChangeText={password => updateState({password})}
+            value={loginReducer.login.password}
+            onChangeText={value => onChangeText(value, 'password')}
             secureTextEntry={true}
             source={iconPassword}
             style={{padding: 13}}

@@ -4,48 +4,65 @@ import {
   View,
   Image,
   StyleSheet,
-  TextInput,
   Text,
-  ScrollView,
-  FlatList,
 } from 'react-native';
 import InputSearching from '../../component/InputSearching';
 import logoUser from '../../Assets/image/logoUser.png';
 import SectionList from 'react-native/Libraries/Lists/SectionList';
+import {useSelector} from 'react-redux'
 
-const RecentList = [
-  {
-    title: 'A',
-    data: [{name: 'Rulisa Andara', phone: '+ 62 112 0984 3455'}, {name: 'Bara Lucy', phone: '+ 62 345 0984 5567'}], 
-  },
-
-  {
-    title: 'B',
-    data: [{name: 'Dena Fanisa', phone: '+ 62 445 7786 1223'}, {name: 'Beni Siahaan', phone: '+ 62 112 4562 9086'} ],
-  },
-
-    {
-    title: 'C',
-    data: [{name: 'Anisa Clova', phone: '+ 62 5678 0989 4456'}],
-  },
-
-  {
-    title: 'D',
-    data: [{name: 'Deri Koswaranda', phone: '+ 62 5678 0989 4456'}],
-  },
-
-    {
-    title: 'E',
-    data: [{name: 'Enita Maria', phone: '+ 62 5678 0989 4456'}],
-  },
-  
+const data = [
+  {name: 'Canda Meong', phone: '+ 62 112 0984 3455'},
+  {name: 'Lalita', phone: '+ 62 345 0984 5567'},
+  {name: 'Dena Fanisa', phone: '+ 62 445 7786 1223'},
+  {name: 'Beni Siahaan', phone: '+ 62 112 4562 9086'},
+  {name: 'Anisa Clova', phone: '+ 62 5678 0989 4456'},
+  {name: 'Deri Koswaranda', phone: '+ 62 5678 0989 4456'},
+  {name: 'Enita Maria', phone: '+ 62 5678 0989 4456'},
 ];
+
+const compare = (a, b) => {
+  if (a.name < b.name) {
+    return -1;
+  }
+  if (a.name > b.name) {
+    return 1;
+  }
+  return 0;
+}
+
+const sortingData = data.sort(compare).map(item => {
+  return {
+    ...item,
+    key: item.name[0],
+  };
+});
+
+
+const groupBy = (items, key) =>
+  items.reduce(
+    (result, item) => ({
+      ...result,
+      [item[key]]: [...(result[item[key]] || []), item],
+    }),
+    {},
+  );
+
+const dataList = [];
+Object.entries(groupBy(sortingData, 'key')).forEach(([key, value]) =>
+  dataList.push({
+    title: key,
+    data: value,
+  }),
+);
 
 const myKeyExtractor = item => {
   return item.id;
 };
 
 const renderItem = ({item}) => {
+  const globalState = useSelector(state => state.loginReducer)
+  console.log('value global', globalState)
   return (
     <View style={{margin: 20}}>
       <View>
@@ -74,15 +91,15 @@ const renderItem = ({item}) => {
 
 //   )
 // }
-
 const Recent = () => {
+  
   return (
     <View style={styles.container}>
       <InputSearching 
       onChangeText
       />
       <SectionList
-        sections={RecentList}
+        sections={dataList}
         renderItem={renderItem}
         myKeyExtractor={myKeyExtractor}
         renderSectionHeader={({section: {title}}) => <Text>{title}</Text>}
@@ -129,8 +146,6 @@ const styles = StyleSheet.create({
     borderRadius: 40 / 2,
     backgroundColor: '#C4C4C4',
     marginRight: 10
-    // margin: ,
-    // padding: 5
   },
 
   wrapperOptionsList: {

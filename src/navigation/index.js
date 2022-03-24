@@ -4,12 +4,11 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {useNavigation} from '@react-navigation/native';
 
-// import IconBack from '../pages/Assets/image/buttonBack.png'
 import { Signup, AddAccount} from '../pages';
 import Router from '../router';
 import buttonBack from '../Assets/image/buttonBack.png';
 import LoginPage from '../pages/Login';
-// import iconButton from '../Assets/image/buttonBack.png';
+
 
 const Stack = createNativeStackNavigator();
 

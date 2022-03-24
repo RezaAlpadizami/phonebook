@@ -1,21 +1,19 @@
 const initialStateRegister = {
-    login: {
-      email: '',
-      password: '',
-    },
-  };
-  
-  const registerReducer = (state = initialStateRegister, action) => {
-    if (action.type === 'SET_FORM') {
-      return {
-        ...state,
-        form: {
-          ...state.form,
-          [action.inputType]: action.inputValue,
-        },
-      };
-    }
-    return state;
-  };
+    name: '',
+    email: '',
+    password: '',
+    confirmPasword: '',
 
-  export default registerReducer
+};
+
+const registerReducer = (state = initialStateRegister, action) => {
+  if (action.type === 'SET_FORM_REGISTER') {
+    return {
+      ...state,
+      [action.inputType]: action.inputValue,
+    };
+  }
+  return state;
+};
+
+export default registerReducer;

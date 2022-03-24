@@ -1,17 +1,12 @@
 /* eslint-disable react-native/no-inline-styles */
 // import axios from 'axios';
 import React, {useState, useEffect} from 'react';
-import {
-  View,
-  Image,
-  TextInput,
-  StyleSheet,
-  Text,
-  FlatList,
-  SectionList,
-} from 'react-native';
+import {View, Image, StyleSheet, Text, SectionList} from 'react-native';
 import InputSearching from '../../component/InputSearching';
 import iconUser from '../../Assets/image/logoUser.png';
+
+const [filterContact, setFilterContact] = useState([]);
+const [search, setSearch] = useState('');
 
 const data = [
   {name: 'Canda Meong', phone: '+ 62 112 0984 3455'},
@@ -23,24 +18,6 @@ const data = [
   {name: 'Enita Maria', phone: '+ 62 5678 0989 4456'},
 ];
 
-// const filterName = text => {
-//   // data.map(e => {
-//   //   let nameSplit = e.name.split('');
-//   //   if (nameSplit[0] === text) {
-//   //     console.log(e)
-//   //     return e;
-//   //   }
-//   // });
-
-//   data.filter(e => {
-//     let namaSplit = e.name.split("")[0]
-//     if(namaSplit == text) {
-//      console.log(e)
-//       return e
-//     }
-//   })
-// };
-
 const compare = (a, b) => {
   if (a.name < b.name) {
     return -1;
@@ -49,7 +26,7 @@ const compare = (a, b) => {
     return 1;
   }
   return 0;
-}
+};
 
 const sortingData = data.sort(compare).map(item => {
   return {
@@ -57,7 +34,6 @@ const sortingData = data.sort(compare).map(item => {
     key: item.name[0],
   };
 });
-
 
 const groupBy = (items, key) =>
   items.reduce(
@@ -76,28 +52,38 @@ Object.entries(groupBy(sortingData, 'key')).forEach(([key, value]) =>
   }),
 );
 
-// console.log(dataList);
-
-
-
-const myKeyExtractor = (item, index) => {
-  return item + index;
+const filteredContact = text => {
+  if (text) {
+    const newDataFilter = dataList.filter(contact => {
+      const itemData = contact.title
+        ? contact.title.toLowerCase()
+        : ''.toLowerCase();
+      const textData = text.toLowerCase()
+      return itemData.indexOf(textData) > -1;
+    });
+    setFilterContact(newDataFilter);
+    setSearch(text);
+  } else {
+    setFilterContact(dataList);
+    setSearch(text);
+  }
 };
 
-const renderItem = ({item}) => {
+const myKeyExtractor = (itemDataKey, index) => {
+  return itemDataKey + index;
+};
 
+const renderItem = ({itemsRender}) => {
   return (
     <View style={{margin: 20}}>
       {/* <View>
        
       </View> */}
       <View style={styles.wrapperList}>
-        <View style={styles.wrapperImageList}>
-          <Image style={styles.imageList} source={iconUser} />
-        </View>
+        <Image style={styles.imageList} source={iconUser} />
         <View>
-          <Text>{item.name}</Text>
-          <Text>{item.phone}</Text>
+          <Text>{itemsRender.name}</Text>
+          <Text>{itemsRender.phone}</Text>
         </View>
         <View style={styles.wrapperOptionsList}>
           <Text style={styles.optionsList}>...</Text>
@@ -106,15 +92,17 @@ const renderItem = ({item}) => {
     </View>
   );
 };
-// console.log('value render..', renderItem)
 
-// return (
 const MyContact = () => {
   return (
     <View style={styles.container}>
-      <InputSearching />
+      <InputSearching
+        onChangeText={text => filteredContact(text)}
+        value={search}
+      />
+
       <SectionList
-        sections={dataList}
+        sections={filterContact}
         renderItem={renderItem}
         keyExtractor={myKeyExtractor}
         renderSectionHeader={({section: {title}}) => <Text>{title}</Text>}
@@ -169,6 +157,7 @@ const styles = StyleSheet.create({
   optionsList: {
     fontWeight: 'bold',
     fontSize: 20,
+    marginRight: 20,
   },
 });
 
