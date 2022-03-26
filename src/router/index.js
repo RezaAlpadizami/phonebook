@@ -14,10 +14,6 @@ function ButtonAdd() {
     navigation.navigate('Back');
   };
 
-  // useEffect(() => {
-  // console.log(loginReducer)
-  // },[loginReducer])
-
   return (
     <TouchableOpacity
       style={{

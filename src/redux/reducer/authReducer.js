@@ -1,6 +1,5 @@
 const initialLoginReducer = {
   data: {
-    info: 'tolong masukkan password anda',
     isLogin: true,
     token: '',
   },
@@ -13,7 +12,6 @@ const initialLoginReducer = {
 const loginReducer = (state = initialLoginReducer, action) => {
   switch (action.type) {
     case 'LOGIN_TOKEN_ACCESS':
-      console.log('value action', action.payload);
       return {
         ...state,
         data: {

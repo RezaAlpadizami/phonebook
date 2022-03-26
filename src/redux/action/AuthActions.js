@@ -2,23 +2,20 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Alert} from 'react-native';
 import Axios from 'axios';
 import URL_API from '../../API/URL_API';
-// import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const setToken = (dispatch, navigation, loginReducer) => {
   Axios.post(`${URL_API}/signin `, {
     email: loginReducer.login.email,
     password: loginReducer.login.password,
+    headers: {
+      Authorization: `Bearer ${AsyncStorage.getItem('token')}`,
+    },
   }).then(response => {
     const responseAPI = response.data.data;
-
-    // console.log('respon', responseAPI);
+    console.log(responseAPI)
+    AsyncStorage.setItem('token', responseAPI.token);
     dispatch({type: 'LOGIN_TOKEN_ACCESS', payload: responseAPI});
 
-    Axios.defaults.headers.common[
-      'Authorization'
-    ] = `Bearer${responseAPI.token}`;
-
-    AsyncStorage.setItem('token', responseAPI.token);
     Alert.alert('Succesfully login');
     navigation
       .navigate('Router')
@@ -29,6 +26,21 @@ export const setToken = (dispatch, navigation, loginReducer) => {
   });
 };
 
+export const fetchAllContact = (dispatch, loginReducer) => {
+  Axios.get(`${URL_API}/contacts`, {
+    headers: {Authorization: `Bearer ${loginReducer.data.token}`},
+  })
+    .then(res => {
+      const allDataContact = res.data;
+      console.log('get all data api terbaru', allDataContact);
+
+      dispatch({type: 'GET_DATA_CONTACT', payload: allDataContact});
+    })
+    .catch(error => {
+      console.log('error get data', error);
+    });
+};
+
 export const setFormLogin = (inputType, value) => {
   return {type: 'SET_FORM_LOGIN', inputType: inputType, inputValue: value};
 };
@@ -36,8 +48,3 @@ export const setFormLogin = (inputType, value) => {
 export const setFormRegister = (inputType, value) => {
   return {type: 'SET_FORM_REGISTER', inputType: inputType, inputValue: value};
 };
-// export const setForm = (dispatch, navigation) => {
-//   const response = Axios.post(`${URL_API}/signup`, {
-
-//   });
-// }

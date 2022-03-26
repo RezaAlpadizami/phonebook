@@ -1,15 +1,10 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, {useState} from 'react';
-import {
-  View,
-  Image,
-  StyleSheet,
-  Text,
-} from 'react-native';
+import {View, Image, StyleSheet, Text, ScrollView} from 'react-native';
 import InputSearching from '../../component/InputSearching';
 import logoUser from '../../Assets/image/logoUser.png';
 import SectionList from 'react-native/Libraries/Lists/SectionList';
-import {useSelector} from 'react-redux'
+import {useSelector} from 'react-redux';
 
 const data = [
   {name: 'Canda Meong', phone: '+ 62 112 0984 3455'},
@@ -29,15 +24,14 @@ const compare = (a, b) => {
     return 1;
   }
   return 0;
-}
+};
 
-const sortingData = data.sort(compare).map(item => {
+const sortingData = data.sort(compare).map(recent => {
   return {
-    ...item,
-    key: item.name[0],
+    ...recent,
+    key: recent.name[0],
   };
 });
-
 
 const groupBy = (items, key) =>
   items.reduce(
@@ -61,8 +55,8 @@ const myKeyExtractor = item => {
 };
 
 const renderItem = ({item}) => {
-  const globalState = useSelector(state => state.loginReducer)
-  console.log('value global', globalState)
+  const globalState = useSelector(state => state.loginReducer);
+  // console.log('value global', globalState);
   return (
     <View style={{margin: 20}}>
       <View>
@@ -76,9 +70,9 @@ const renderItem = ({item}) => {
           <Text>{item.name}</Text>
           <Text>{item.phone}</Text>
         </View>
-        <View style={styles.wrapperOptionsList}>
-          <Text style={styles.optionsList}>...</Text>
-        </View>
+      </View>
+      <View style={styles.wrapperOptionsList}>
+        <Text style={styles.optionsList}>...</Text>
       </View>
     </View>
   );
@@ -92,19 +86,15 @@ const renderItem = ({item}) => {
 //   )
 // }
 const Recent = () => {
-  
   return (
     <View style={styles.container}>
-      <InputSearching 
-      onChangeText
-      />
+      <InputSearching onChangeText />
       <SectionList
         sections={dataList}
         renderItem={renderItem}
         myKeyExtractor={myKeyExtractor}
         renderSectionHeader={({section: {title}}) => <Text>{title}</Text>}
         style={{margin: 10}}
-       
       />
     </View>
   );
@@ -145,16 +135,19 @@ const styles = StyleSheet.create({
     height: 40,
     borderRadius: 40 / 2,
     backgroundColor: '#C4C4C4',
-    marginRight: 10
+    marginRight: 10,
   },
 
   wrapperOptionsList: {
-    marginStart: 160,
+    marginStart: 140,
+    alignSelf: 'flex-end',
   },
 
   optionsList: {
     fontWeight: 'bold',
     fontSize: 20,
+    position: 'absolute',
+    top: -40,
   },
 });
 

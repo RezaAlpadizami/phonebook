@@ -1,9 +1,8 @@
-import {View, Image, TextInput, StyleSheet} from 'react-native';
 import React from 'react';
+import {View, Image, TextInput, StyleSheet} from 'react-native';
 import iconSearching from '../../Assets/image/iconSearching.png';
 
-
-const InputSearching = (initialValue, onChangeText) => {
+const InputSearching = () => {
   return (
     <View style={{justifyContent: 'center', alignItems: 'center'}}>
       <View style={styles.sectionStyle}>
@@ -11,8 +10,6 @@ const InputSearching = (initialValue, onChangeText) => {
         <TextInput
           placeholderTextColor="#000000"
           placeholder="Search contact"
-          onChangeText={onChangeText}
-          value = {initialValue}
         />
       </View>
     </View>

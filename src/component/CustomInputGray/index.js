@@ -2,7 +2,7 @@ import {View, Image, TextInput, StyleSheet} from 'react-native';
 import React from 'react';
 // import iconInput from '../../Assets/image/email1.png';
 
-const CustomInput = ({
+const CustomInputGray = ({
   placeholder,
   onChangeText,
   secureTextEntry,
@@ -13,7 +13,7 @@ const CustomInput = ({
     <View style={styles.sectionStyle}>
       <Image style={styles.imageInput} source={source} />
       <TextInput
-        placeholderTextColor="#B6AFAF"
+        placeholderTextColor="#353434"
         placeholder={placeholder}
         style={style}
         onChangeText={onChangeText}
@@ -27,7 +27,7 @@ const CustomInput = ({
 const styles = StyleSheet.create({
   sectionStyle: {
     flexDirection: 'row',
-    backgroundColor: '#1D3E53',
+    backgroundColor: '#C4C4C4',
     height: 40,
     margin: 10,
     width: 307,
@@ -38,4 +38,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CustomInput;
+export default CustomInputGray;
