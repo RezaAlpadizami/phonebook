@@ -7,6 +7,7 @@ const initialLoginReducer = {
     email: '',
     password: '',
   },
+  contaclist: []
 };
 
 const loginReducer = (state = initialLoginReducer, action) => {
@@ -30,6 +31,12 @@ const loginReducer = (state = initialLoginReducer, action) => {
           [action.inputType]: action.inputValue,
         },
       };
+
+      case 'ADD_CONTACT' :
+        return {
+
+        }
+
   }
 
   return state;

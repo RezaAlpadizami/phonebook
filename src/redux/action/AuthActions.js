@@ -8,7 +8,6 @@ export const setToken = (dispatch, navigation, loginReducer) => {
     email: loginReducer.login.email,
     password: loginReducer.login.password,
     headers: {
-      Authorization: `Bearer ${AsyncStorage.getItem('token')}`,
     },
   }).then(response => {
     const responseAPI = response.data.data;
@@ -31,8 +30,8 @@ export const fetchAllContact = (dispatch, loginReducer) => {
     headers: {Authorization: `Bearer ${loginReducer.data.token}`},
   })
     .then(res => {
-      const allDataContact = res.data;
-      console.log('get all data api terbaru', allDataContact);
+      const allDataContact = res.data.data;
+      // console.log('get all data api terbaru', allDataContact);
 
       dispatch({type: 'GET_DATA_CONTACT', payload: allDataContact});
     })

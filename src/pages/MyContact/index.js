@@ -8,6 +8,9 @@ import {
   Text,
   SectionList,
   ScrollView,
+  Modal,
+  Pressable,
+  Alert,
 } from 'react-native';
 import InputSearching from '../../component/InputSearching';
 import iconUser from '../../Assets/image/logoUser.png';
@@ -17,14 +20,18 @@ import {fetchAllContact} from '../../redux/action';
 const MyContact = () => {
   const homeReducer = useSelector(state => state.homeReducer);
   const loginReducer = useSelector(state => state.loginReducer);
+  const addReducer = useSelector(state => state.addReducer)
   const dispatch = useDispatch();
-  // const [dataShow, setDataShow] = useState('');
-  // const [search, setSearch] = useState('');
+  const [modalVisible, setModalVisible] = useState(false);
+  const data = homeReducer.data;
 
-  // let userInput = ''
+  // const getAllContact = async () => {
+  //   await fetchAllContact(dispatch, loginReducer);
+  // };
 
   useEffect(() => {
     fetchAllContact(dispatch, loginReducer);
+    // getAllContact();
   }, []);
 
   const compare = (a, b) => {
@@ -37,18 +44,15 @@ const MyContact = () => {
     return 0;
   };
 
-  const data = homeReducer.data.data;
-  console.log('datas', data)
-
-  const sortingData = data?.sort(compare).map(item => {
+  const sortingData = data.sort(compare).map(item => {
     return {
       ...item,
       key: item.name[0],
-    }
+    };
   });
 
   const groupBy = (items, key) =>
-    items?.reduce(
+    items.reduce(
       (result, item) => ({
         ...result,
         [item[key]]: [...(result[item[key]] || []), item],
@@ -57,12 +61,19 @@ const MyContact = () => {
     );
 
   const dataList = [];
-  Object !== null?.entries(groupBy(sortingData, 'key')).forEach(([keys, value]) =>
+  Object?.entries(groupBy(sortingData, 'key')).forEach(([keys, value]) =>
     dataList.push({
       title: keys,
       data: value,
     }),
   );
+
+  const deleteProduct = async id => {
+    await axios.delete(
+      `https://phone-book-api.herokuapp.com/api/v1/contacts/${id}`,
+    );
+    fetchAllContact();
+  };
 
   const myKeyExtractor = (itemDataKey, index) => {
     return itemDataKey + index;
@@ -80,21 +91,40 @@ const MyContact = () => {
             <Text>{item.phone}</Text>
           </View>
         </View>
-        <View style={styles.wrapperOptionsList}>
-          <Text style={styles.optionsList}>...</Text>
+        <View style={styles.centeredView}>
+          <Modal
+            animationType="fade"
+            transparent={true}
+            visible={modalVisible}
+            onRequestClose={() => {
+              Alert.alert('Modal has been closed.');
+              setModalVisible(!modalVisible);
+            }}>
+            <View style={{position: 'relative', top: 250, bottom: 250}}>
+              <View style={styles.modalView}>
+                <Pressable>
+                  <Text style={styles.modalText}>Favorite</Text>
+                </Pressable>
+                <Pressable onPress={id => deleteProduct(id)}>
+                  <Text style={styles.modalText}>Delete</Text>
+                </Pressable>
+                <Pressable
+                  style={[styles.button, styles.buttonClose]}
+                  onPress={() => setModalVisible(!modalVisible)}>
+                  <Text style={styles.textStyle}>Hide Modal</Text>
+                </Pressable>
+              </View>
+            </View>
+          </Modal>
+          <Pressable
+            style={[styles.button, styles.buttonOpen]}
+            onPress={() => setModalVisible(true)}>
+            <Text style={styles.textStyleOptios}>. . .</Text>
+          </Pressable>
         </View>
       </View>
     );
   };
-
-  // searchUpdated = (input) => {
-  //   if(input === ''){
-  //     search(false)
-  //     userInput = ''
-  //   }else{
-  //     search(true)
-  //   }
-  // }
 
   return (
     <View style={styles.container}>
@@ -149,16 +179,58 @@ const styles = StyleSheet.create({
   },
 
   wrapperOptionsList: {
-    marginStart: 140,
+    // marginStart: 140,
     alignSelf: 'flex-end',
   },
 
-  optionsList: {
-    fontWeight: 'bold',
-    fontSize: 20,
-    marginRight: 20,
+  centeredView: {
+    flex: 1,
+    marginTop: 22,
     position: 'absolute',
-    top: -40,
+    right: 0,
+    top: -25,
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 35,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+  },
+  button: {
+    // borderRadius: 20,
+    padding: 10,
+    // elevation: 2,
+  },
+  buttonOpen: {
+    // backgroundColor: '#F194F',
+  },
+  buttonClose: {
+    backgroundColor: '#2196F3',
+  },
+  textStyle: {
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+
+  textStyleOptios: {
+    color: 'black',
+    fontWeight: 'bold',
+    textAlign: 'center',
+    fontSize: 20,
+  },
+
+  modalText: {
+    marginBottom: 15,
+    textAlign: 'center',
   },
 });
 
